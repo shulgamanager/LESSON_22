@@ -1,0 +1,536 @@
+{
+	"info": {
+		"_postman_id": "f3c5da32-f90b-4da3-ba7f-ce9885d90c2b",
+		"name": "Homework_19",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27837094",
+		"_collection_link": "https://www.postman.com/research-explorer-88818244/workspace/practice-18/collection/27837094-f3c5da32-f90b-4da3-ba7f-ce9885d90c2b?action=share&creator=27837094&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "Sign in user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"shulgamanager@gmail.com\",\r\n  \"password\": \"Fkz12051988fkz\",\r\n  \"remember\": false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{home19_url}}/auth/signin",
+					"protocol": "https",
+					"host": [
+						"{{home19_url}}"
+					],
+					"path": [
+						"auth",
+						"signin"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all models",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{home19_url}}/cars/models",
+					"protocol": "https",
+					"host": [
+						"{{home19_url}}"
+					],
+					"path": [
+						"cars",
+						"models"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add car",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var moment= require ('moment');\r",
+							"pm.collectionVariables.set('tmp19_current_date', moment(). format((\"YYYY-MM-DD\")));"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"pm.collectionVariables.set(\"car19_id\", jsonData.data.id);\r",
+							"\r",
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"pm.test(\"Check data in response body\", function () {\r",
+							"    const {data: {carBrandId, brand, model, mileage}} = pm.response.json();\r",
+							"    pm.expect(carBrandId).to.eql(2);\r",
+							"    pm.expect(brand).to.eql(\"BMW\");\r",
+							"    pm.expect(model).to.eql(\"X5\");\r",
+							"    pm.expect(mileage).to.eql(+pm.collectionVariables.get('mileage_car_add'));\r",
+							"    });"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"carBrandId\": 2,\r\n  \"carModelId\": 8,\r\n  \"mileage\": {{mileage_car_add}}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{home19_url}}/cars",
+					"protocol": "https",
+					"host": [
+						"{{home19_url}}"
+					],
+					"path": [
+						"cars"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update car",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Check the mileage has been updated\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.data.mileage).to.eql(+pm.collectionVariables.get('mileage_car_update'));\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"carBrandId\": 2,\r\n  \"carModelId\": 8,\r\n  \"mileage\": {{mileage_car_update}}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{home19_url}}/cars/{{car19_id}}",
+					"protocol": "https",
+					"host": [
+						"{{home19_url}}"
+					],
+					"path": [
+						"cars",
+						"{{car19_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add expenses",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"pm.collectionVariables.set(\"expense_id\", jsonData.data.id);\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Check data in response body\", function () {\r",
+							"    const {data: {liters, mileage, totalCost}} = pm.response.json();\r",
+							"    pm.expect(liters).to.eql(+pm.collectionVariables.get('liters_add'));\r",
+							"    pm.expect(mileage).to.eql(+pm.collectionVariables.get('mileage_expense_add'));\r",
+							"    pm.expect(totalCost).to.eql(+pm.collectionVariables.get('totalCost_add'));\r",
+							"    });"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"carId\": {{car19_id}},\r\n  \"reportedAt\": \"{{tmp19_current_date}}\",\r\n  \"mileage\": {{mileage_expense_add}},\r\n  \"liters\": {{liters_add}},\r\n  \"totalCost\": {{totalCost_add}},\r\n  \"forceMileage\": false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{home19_url}}/expenses",
+					"protocol": "https",
+					"host": [
+						"{{home19_url}}"
+					],
+					"path": [
+						"expenses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update expenses",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Check the mileage has been updated\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.data.liters).to.eql(+pm.collectionVariables.get('liters_update'));\r",
+							"    pm.expect(jsonData.data.mileage).to.eql(+pm.collectionVariables.get('mileage_expense_update'));\r",
+							"    pm.expect(jsonData.data.totalCost).to.eql(+pm.collectionVariables.get('totalCost_update'));\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"carId\": {{car19_id}},\r\n  \"reportedAt\": \"{{tmp19_current_date}}\",\r\n  \"mileage\": {{mileage_expense_update}},\r\n  \"liters\": {{liters_update}},\r\n  \"totalCost\": {{totalCost_update}},\r\n  \"forceMileage\": false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{home19_url}}/expenses/{{expense_id}}",
+					"protocol": "https",
+					"host": [
+						"{{home19_url}}"
+					],
+					"path": [
+						"expenses",
+						"{{expense_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete expenses",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://{{home19_url}}/expenses/{{expense_id}}",
+					"protocol": "https",
+					"host": [
+						"{{home19_url}}"
+					],
+					"path": [
+						"expenses",
+						"{{expense_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get expenses",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{home19_url}}/expenses/{{expense_id}}",
+					"protocol": "https",
+					"host": [
+						"{{home19_url}}"
+					],
+					"path": [
+						"expenses",
+						"{{expense_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete car",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://{{home19_url}}/cars/{{car19_id}}",
+					"protocol": "https",
+					"host": [
+						"{{home19_url}}"
+					],
+					"path": [
+						"cars",
+						"{{car19_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get car",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"pm.test(\"Get check erorr \", () => {\r",
+							"    pm.expect(pm.response.text()).to.include(\"Car not found\");\r",
+							"  });  "
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{home19_url}}/cars/{{car19_id}}",
+					"protocol": "https",
+					"host": [
+						"{{home19_url}}"
+					],
+					"path": [
+						"cars",
+						"{{car19_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "logout",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{home19_url}}/auth/logout",
+					"protocol": "https",
+					"host": [
+						"{{home19_url}}"
+					],
+					"path": [
+						"auth",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.test(\"Response time is less than 2000ms\", function () {",
+					"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+					"});"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "home19_url",
+			"value": "qauto2.forstudy.space/api",
+			"type": "string"
+		},
+		{
+			"key": "car19_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "tmp19_current_date",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "expense_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "mileage_car_update",
+			"value": "400",
+			"type": "string"
+		},
+		{
+			"key": "liters_add",
+			"value": "80",
+			"type": "string"
+		},
+		{
+			"key": "totalCost_add",
+			"value": "85",
+			"type": "string"
+		},
+		{
+			"key": "mileage_expense_add",
+			"value": "500",
+			"type": "string"
+		},
+		{
+			"key": "mileage_car_add",
+			"value": "200",
+			"type": "string"
+		},
+		{
+			"key": "mileage_expense_update",
+			"value": "600",
+			"type": "string"
+		},
+		{
+			"key": "totalCost_update",
+			"value": "95",
+			"type": "string"
+		},
+		{
+			"key": "liters_update",
+			"value": "90",
+			"type": "string"
+		}
+	]
+}
